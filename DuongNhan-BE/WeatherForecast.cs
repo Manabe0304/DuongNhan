@@ -1,4 +1,4 @@
-namespace DuongNhan_BE
+namespace DuongNhan.Server
 {
     public class WeatherForecast
     {
