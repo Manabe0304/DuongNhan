@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="DuongNhan-FE/DuongNhan-FE.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="DuongNhan-BE/DuongNhan-BE.csproj" />
+</Solution>
