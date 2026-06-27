@@ -1,7 +1,7 @@
 <Solution>
   <Project Path="duongnhan.client/DuongNhan-FE.esproj">
     <Build />
-    <Deploy />
+    <Deploy Solution="Release|*" />
   </Project>
   <Project Path="DuongNhan.Server/DuongNhan-BE.csproj" />
 </Solution>
