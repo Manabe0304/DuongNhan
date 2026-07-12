@@ -1,25 +1,6 @@
-import {
-    BrowserRouter,
-    Routes,
-    Route
-} from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
 
-import HomePage from "./features/public/pages/HomePage.jsx";
-
-function App() {
-    return (
-        <BrowserRouter>
-            <Routes>
-
-                {/* Trang mặc định */}
-                <Route
-                    path="/"
-                    element={<HomePage />}
-                />
-
-            </Routes>
-        </BrowserRouter>
-    );
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App;
