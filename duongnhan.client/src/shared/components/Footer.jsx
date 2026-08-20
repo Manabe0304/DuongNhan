@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import { ScanFace } from "lucide-react";
-import { IconFacebook, IconInstagram, IconYoutube } from "./SocialIcons";
+import { FaFacebook, FaInstagram, FaYoutube, FaUserDoctor } from "react-icons/fa6";
 import { ROUTES } from "../../router/routes";
 
 const SOCIALS = [
-  { Icon: IconFacebook, label: "Facebook" },
-  { Icon: IconInstagram, label: "Instagram" },
-  { Icon: IconYoutube, label: "YouTube" },
+  { Icon: FaFacebook, label: "Facebook" },
+  { Icon: FaInstagram, label: "Instagram" },
+  { Icon: FaYoutube, label: "YouTube" },
 ];
 
 export default function Footer() {
@@ -17,7 +16,7 @@ export default function Footer() {
           <div className="col-12 col-md-5">
             <div className="d-flex align-items-center gap-2 mb-3">
               <span className="d-flex align-items-center justify-content-center rounded-circle bg-coral" style={{ width: 32, height: 32 }}>
-                <ScanFace size={17} color="#fff" />
+                <FaUserDoctor size={15} color="#fff" />
               </span>
               <span className="ss-display fs-5 fw-semibold text-white">Skin Sensi</span>
             </div>

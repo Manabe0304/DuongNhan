@@ -51,7 +51,7 @@ export default function ContactPage() {
             </div>
           </div>
           <div className="bg-white border border-line r-xl p-3 d-flex flex-column gap-2 small">
-            <div className="d-flex align-items-center gap-2"><MapPin size={16} color="var(--coral)" /> 268 Lý Thường Kiệt, Q.10, TP.HCM</div>
+            <div className="d-flex align-items-center gap-2"><MapPin size={16} color="var(--coral)" /> 268 Lý Thường Kiệt, P. Cửa Nam, Hà Nội</div>
             <div className="d-flex align-items-center gap-2"><Clock size={16} color="var(--coral)" /> 8:00 – 18:00, Thứ 2 – Thứ 7</div>
             <div className="d-flex align-items-center gap-2"><Send size={16} color="var(--coral)" /> hello@duongnhan.ai</div>
           </div>

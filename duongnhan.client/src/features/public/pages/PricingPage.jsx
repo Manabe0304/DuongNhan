@@ -28,7 +28,7 @@ export default function PricingPage() {
         {plans.map((p) => (
           <div key={p.name} className="col-12 col-md-4">
             <div className={`r-xl p-4 h-100 d-flex flex-column border ${p.highlight ? "border-coral" : "border-line"}`} style={{ background: p.highlight ? "#FFF8F5" : "#fff" }}>
-              {p.highlight && <span className="badge bg-coral text-white align-self-start mb-2" style={{ fontSize: ".65rem" }}>PHỔ BIẾN NHẤT</span>}
+              {p.highlight && <span className="badge bg-coral text-black align-self-start mb-2" style={{ fontSize: ".65rem" }}>PHỔ BIẾN NHẤT</span>}
               <h5 className="fw-semibold mb-1">{p.name}</h5>
               <p className="text-muted-ss small mb-3">{p.tagline}</p>
               <p className="ss-mono fw-semibold mb-3" style={{ fontSize: "1.8rem" }}>
