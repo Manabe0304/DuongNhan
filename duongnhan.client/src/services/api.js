@@ -2,27 +2,27 @@ import axios from "axios";
 import { loadAuth, clearAuth } from "../utils/authStorage";
 
 /**
- * axios instance dùng chung cho toàn app khi backend đã sẵn sàng.
- * features/auth/authApi.js hiện dùng dữ liệu mock (chưa có backend thật —
- * cùng cách tiếp cận với public/data/*.js ở Phase 2). Khi backend xong, chỉ
- * cần đổi phần thân các hàm trong authApi.js sang gọi qua `api` bên dưới,
- * phần interceptor JWT đã sẵn sàng.
+ * Axios instance dùng chung cho toàn bộ ứng dụng.
+ * Tự động gắn tiền tố /api và bắt lỗi timeout sau 15s.
  */
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
   timeout: 15000,
 });
 
-// Tự đính JWT vào mọi request nếu đã đăng nhập
-api.interceptors.request.use((config) => {
-  const auth = loadAuth();
-  if (auth?.token) {
-    config.headers.Authorization = `Bearer ${auth.token}`;
-  }
-  return config;
-});
+// Interceptor Request: Tự động đính kèm JWT Bearer Token nếu đã đăng nhập
+api.interceptors.request.use(
+  (config) => {
+    const auth = loadAuth();
+    if (auth?.token) {
+      config.headers.Authorization = `Bearer ${auth.token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// 401 -> phiên hết hạn: xoá auth, đẩy về /login
+// Interceptor Response: Khi nhận mã 401 (Unauthorized), dọn dẹp session và chuyển về trang login
 api.interceptors.response.use(
   (res) => res,
   (error) => {
@@ -35,5 +35,33 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+/**
+ * Gọi API Đăng nhập: POST /api/auth/login
+ * @param {Object} credentials - { email, password }
+ * @returns {Promise<Object>} Phản hồi từ Backend { token, user: { id, fullName, email, role, isPremium } }
+ */
+export const loginApi = async ({ email, password }) => {
+  const response = await api.post("/auth/login", {
+    email: email.trim(),
+    password: password,
+  });
+  return response.data;
+};
+
+/**
+ * Gọi API Đăng ký: POST /api/auth/register
+ * @param {Object} userData - { fullName, name, email, password, phoneNumber }
+ * @returns {Promise<Object>} Phản hồi từ Backend { message }
+ */
+export const registerApi = async ({ fullName, name, email, password, phoneNumber }) => {
+  const response = await api.post("/auth/register", {
+    fullName: (fullName || name || "").trim(),
+    email: email.trim(),
+    password: password,
+    phoneNumber: phoneNumber || null,
+  });
+  return response.data;
+};
 
 export default api;

@@ -1,65 +1,76 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { GoogleLogin } from "@react-oauth/google";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa6";
 import AuthShell from "../components/AuthShell";
-import { useAuth } from "../../../shared/hooks/useAuth";
+import { loginUser, clearError, setCredentials } from "../authSlice";
 import * as authApi from "../authApi";
 import { ROUTES } from "../../../router/routes";
 
 /**
  * LoginPage — Route: /login (auth/pages/LoginPage.jsx)
- * Email + Password + Remember Me + nút Google + link quên mật khẩu.
- * POST /api/auth/login (mock hiện tại — xem authApi.js).
+ * Tích hợp Redux Thunk `loginUser` gọi API /api/auth/login,
+ * lưu token vào LocalStorage và cập nhật Auth State.
  */
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setCredentials } = useAuth();
+  const dispatch = useDispatch();
+
+  const { loading, error: authError } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [remember, setRemember] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [localError, setLocalError] = useState("");
 
   const redirectAfterLogin = (user) => {
     const from = location.state?.from?.pathname;
-    if (user.isNewUser) return navigate(ROUTES.COMPLETE_PROFILE, { replace: true });
+    if (user?.isNewUser) return navigate(ROUTES.COMPLETE_PROFILE, { replace: true });
     navigate(from || ROUTES.DASHBOARD, { replace: true });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
+    setLocalError("");
+    dispatch(clearError());
+
     try {
-      const { token, refreshToken, user } = await authApi.login(form);
-      setCredentials({ token, refreshToken, user, remember });
-      toast.success(`Chào mừng trở lại, ${user.name}!`);
-      redirectAfterLogin(user);
+      const result = await dispatch(
+        loginUser({
+          email: form.email,
+          password: form.password,
+          remember,
+        })
+      ).unwrap();
+
+      toast.success(`Chào mừng trở lại, ${result.user?.name || "bạn"}!`);
+      redirectAfterLogin(result.user);
     } catch (err) {
-      setError(err.message || "Đăng nhập thất bại.");
-    } finally {
-      setLoading(false);
+      const errorMsg = typeof err === "string" ? err : err?.message || "Đăng nhập thất bại.";
+      setLocalError(errorMsg);
+      toast.error(errorMsg);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    setError("");
-    setLoading(true);
+    setLocalError("");
+    dispatch(clearError());
     try {
       const { token, refreshToken, user } = await authApi.googleLogin(credentialResponse.credential);
-      setCredentials({ token, refreshToken, user, remember: true });
+      dispatch(setCredentials({ token, refreshToken, user, remember: true }));
       toast.success(`Chào mừng, ${user.name}!`);
       redirectAfterLogin(user);
     } catch (err) {
-      setError(err.message || "Đăng nhập với Google thất bại.");
-    } finally {
-      setLoading(false);
+      const errorMsg = err.message || "Đăng nhập với Google thất bại.";
+      setLocalError(errorMsg);
+      toast.error(errorMsg);
     }
   };
+
+  const activeError = localError || authError;
 
   return (
     <AuthShell
@@ -72,7 +83,7 @@ export default function LoginPage() {
         </span>
       }
     >
-      {error && <div className="alert alert-danger py-2 small r-lg mb-3">{error}</div>}
+      {activeError && <div className="alert alert-danger py-2 small r-lg mb-3">{activeError}</div>}
 
       <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
         <div>
@@ -124,7 +135,7 @@ export default function LoginPage() {
         </div>
 
         <button type="submit" disabled={loading} className="btn btn-coral r-pill fw-semibold py-2">
-          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          {loading ? "Đang xử lý..." : "Đăng nhập"}
         </button>
       </form>
 
@@ -135,7 +146,7 @@ export default function LoginPage() {
       <div className="d-flex justify-content-center">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
-          onError={() => setError("Đăng nhập với Google thất bại.")}
+          onError={() => setLocalError("Đăng nhập với Google thất bại.")}
           theme="outline"
           shape="pill"
           text="signin_with"

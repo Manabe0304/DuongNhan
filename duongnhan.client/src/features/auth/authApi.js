@@ -1,4 +1,4 @@
-import { api } from "../../services/api";
+import { api, loginApi, registerApi } from "../../services/api";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -45,12 +45,7 @@ function normalizeUser(rawUser) {
  */
 export async function login({ email, password }) {
   try {
-    const response = await api.post("/auth/login", {
-      email: email.trim(),
-      password: password,
-    });
-
-    const data = response.data;
+    const data = await loginApi({ email, password });
     return {
       token: data.token,
       refreshToken: null,
@@ -72,11 +67,11 @@ export async function login({ email, password }) {
  */
 export async function register({ name, email, password, phoneNumber }) {
   try {
-    await api.post("/auth/register", {
-      fullName: name.trim(),
-      email: email.trim(),
-      password: password,
-      phoneNumber: phoneNumber || null,
+    await registerApi({
+      fullName: name,
+      email,
+      password,
+      phoneNumber,
     });
 
     // Tự động đăng nhập lấy token ngay sau khi đăng ký thành công

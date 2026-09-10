@@ -1,52 +1,62 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa6";
 import AuthShell from "../components/AuthShell";
-import { useAuth } from "../../../shared/hooks/useAuth";
-import * as authApi from "../authApi";
+import { registerUser, clearError } from "../authSlice";
 import { ROUTES } from "../../../router/routes";
 
 /**
  * RegisterPage — Route: /register (auth/pages/RegisterPage.jsx)
- * Họ tên · Email · Password · Confirm · Điều khoản · POST /api/auth/register.
+ * Tích hợp Redux Thunk `registerUser` gọi API /api/auth/register,
+ * tự động đăng nhập nhận JWT token và lưu vào LocalStorage.
  */
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { setCredentials } = useAuth();
+  const dispatch = useDispatch();
+
+  const { loading, error: authError } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [agree, setAgree] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [localError, setLocalError] = useState("");
 
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setLocalError("");
+    dispatch(clearError());
 
     if (form.password !== form.confirm) {
-      setError("Mật khẩu xác nhận không khớp.");
+      setLocalError("Mật khẩu xác nhận không khớp.");
       return;
     }
     if (!agree) {
-      setError("Bạn cần đồng ý với Điều khoản dịch vụ để tiếp tục.");
+      setLocalError("Bạn cần đồng ý với Điều khoản dịch vụ để tiếp tục.");
       return;
     }
 
-    setLoading(true);
     try {
-      const { token, refreshToken, user } = await authApi.register(form);
-      setCredentials({ token, refreshToken, user, remember: true });
-      toast.success("Tạo tài khoản thành công!");
+      await dispatch(
+        registerUser({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        })
+      ).unwrap();
+
+      toast.success("Tạo tài khoản và đăng nhập thành công!");
       navigate(ROUTES.DASHBOARD, { replace: true });
     } catch (err) {
-      setError(err.message || "Đăng ký thất bại.");
-    } finally {
-      setLoading(false);
+      const errorMsg = typeof err === "string" ? err : err?.message || "Đăng ký thất bại.";
+      setLocalError(errorMsg);
+      toast.error(errorMsg);
     }
   };
+
+  const activeError = localError || authError;
 
   return (
     <AuthShell
@@ -59,7 +69,7 @@ export default function RegisterPage() {
         </span>
       }
     >
-      {error && <div className="alert alert-danger py-2 small r-lg mb-3">{error}</div>}
+      {activeError && <div className="alert alert-danger py-2 small r-lg mb-3">{activeError}</div>}
 
       <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
         <div>
