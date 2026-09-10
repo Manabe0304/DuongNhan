@@ -3,6 +3,7 @@ export const ROUTES = {
   HOME: "/",
   DOCTORS: "/doctors",
   PRODUCTS: "/products",
+  PRODUCT_DETAIL: "/products/:id",
   PRICING: "/pricing",
   CONTACT: "/contact",
   // Auth (standalone, không PublicLayout)
@@ -14,4 +15,5 @@ export const ROUTES = {
   // Private
   DASHBOARD: "/dashboard",
   SCAN: "/scan",
+  PROFILE: "/profile",
 };

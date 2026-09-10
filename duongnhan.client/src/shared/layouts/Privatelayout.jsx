@@ -13,6 +13,7 @@ import {
   FaArrowLeft,
   FaShieldHalved,
   FaCamera,
+  FaUser,
 } from "react-icons/fa6";
 import { useAuth } from "../hooks/useAuth";
 import { ROUTES } from "../../router/routes";
@@ -30,6 +31,7 @@ export default function PrivateLayout() {
   const navItems = [
     { to: ROUTES.DASHBOARD, label: "Tổng quan", icon: FaHouse, end: true },
     { to: ROUTES.SCAN, label: "Soi da AI", icon: FaCamera },
+    { to: ROUTES.PROFILE, label: "Hồ sơ cá nhân", icon: FaUser },
     { to: ROUTES.DOCTORS, label: "Bác sĩ da liễu", icon: FaUserDoctor },
     { to: ROUTES.PRODUCTS, label: "Sản phẩm gợi ý", icon: FaPumpSoap },
     { to: ROUTES.PRICING, label: "Gói dịch vụ", icon: FaCrown },
@@ -62,7 +64,11 @@ export default function PrivateLayout() {
       </div>
 
       {/* User Info Card */}
-      <div className="bg-white border border-line r-lg p-3 mb-4 shadow-sm">
+      <Link
+        to={ROUTES.PROFILE}
+        onClick={() => setSidebarOpen(false)}
+        className="bg-white border border-line r-lg p-3 mb-4 shadow-sm text-decoration-none text-body hover-bg-cream transition-all d-block"
+      >
         <div className="d-flex align-items-center gap-2">
           {user?.avatar ? (
             <img
@@ -94,7 +100,7 @@ export default function PrivateLayout() {
             </div>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* Navigation Links */}
       <nav className="nav flex-column gap-1 flex-grow-1">
@@ -206,7 +212,10 @@ export default function PrivateLayout() {
               <span>Đặt lịch khám</span>
             </Link>
 
-            <div className="d-flex align-items-center gap-2 ms-2 ps-2 border-start border-line">
+            <Link
+              to={ROUTES.PROFILE}
+              className="d-flex align-items-center gap-2 ms-2 ps-2 border-start border-line text-decoration-none hover-opacity"
+            >
               {user?.avatar ? (
                 <img
                   src={user.avatar}
@@ -226,7 +235,7 @@ export default function PrivateLayout() {
               <span className="d-none d-lg-inline small fw-semibold text-body">
                 {user?.name || user?.fullName || "Tài khoản"}
               </span>
-            </div>
+            </Link>
           </div>
         </header>
 

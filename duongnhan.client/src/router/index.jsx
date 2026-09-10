@@ -3,6 +3,7 @@ import PublicLayout from "../shared/layouts/PublicLayout";
 import HomePage from "../features/public/pages/HomePage";
 import DoctorsPage from "../features/public/pages/DoctorsPage";
 import ProductsPage from "../features/public/pages/ProductsPage";
+import ProductDetailPage from "../features/public/pages/ProductDetailPage";
 import PricingPage from "../features/public/pages/PricingPage";
 import ContactPage from "../features/public/pages/ContactPage";
 import LoginPage from "../features/auth/pages/LoginPage";
@@ -12,6 +13,7 @@ import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
 import DashboardPage from "../features/dashboard/pages/DashboardPage";
 import SkinScanPage from "../features/scan/pages/SkinScanPage";
+import ProfilePage from "../features/profile/pages/ProfilePage";
 import PrivateLayout from "../shared/layouts/Privatelayout";
 import PrivateRoute from "./PrivateRoute";
 import { ROUTES } from "./routes";
@@ -29,6 +31,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.HOME, element: <HomePage /> },
       { path: ROUTES.DOCTORS, element: <DoctorsPage /> },
       { path: ROUTES.PRODUCTS, element: <ProductsPage /> },
+      { path: ROUTES.PRODUCT_DETAIL, element: <ProductDetailPage /> },
       { path: ROUTES.PRICING, element: <PricingPage /> },
       { path: ROUTES.CONTACT, element: <ContactPage /> },
     ],
@@ -48,6 +51,7 @@ export const router = createBrowserRouter([
         children: [
           { path: ROUTES.DASHBOARD, element: <DashboardPage /> },
           { path: ROUTES.SCAN, element: <SkinScanPage /> },
+          { path: ROUTES.PROFILE, element: <ProfilePage /> },
         ],
       },
     ],
