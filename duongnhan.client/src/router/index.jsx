@@ -11,6 +11,7 @@ import CompleteProfilePage from "../features/auth/pages/CompleteProfilePage";
 import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
 import DashboardPage from "../features/dashboard/pages/DashboardPage";
+import SkinScanPage from "../features/scan/pages/SkinScanPage";
 import PrivateLayout from "../shared/layouts/Privatelayout";
 import PrivateRoute from "./PrivateRoute";
 import { ROUTES } from "./routes";
@@ -44,7 +45,10 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <PrivateLayout />,
-        children: [{ path: ROUTES.DASHBOARD, element: <DashboardPage /> }],
+        children: [
+          { path: ROUTES.DASHBOARD, element: <DashboardPage /> },
+          { path: ROUTES.SCAN, element: <SkinScanPage /> },
+        ],
       },
     ],
   },

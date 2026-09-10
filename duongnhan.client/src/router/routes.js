@@ -11,6 +11,7 @@ export const ROUTES = {
   COMPLETE_PROFILE: "/complete-profile",
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password",
-  // Private (placeholder — đầy đủ ở Phase 4+)
+  // Private
   DASHBOARD: "/dashboard",
+  SCAN: "/scan",
 };

@@ -12,6 +12,7 @@ import {
   FaCrown,
   FaArrowLeft,
   FaShieldHalved,
+  FaCamera,
 } from "react-icons/fa6";
 import { useAuth } from "../hooks/useAuth";
 import { ROUTES } from "../../router/routes";
@@ -28,6 +29,7 @@ export default function PrivateLayout() {
 
   const navItems = [
     { to: ROUTES.DASHBOARD, label: "Tổng quan", icon: FaHouse, end: true },
+    { to: ROUTES.SCAN, label: "Soi da AI", icon: FaCamera },
     { to: ROUTES.DOCTORS, label: "Bác sĩ da liễu", icon: FaUserDoctor },
     { to: ROUTES.PRODUCTS, label: "Sản phẩm gợi ý", icon: FaPumpSoap },
     { to: ROUTES.PRICING, label: "Gói dịch vụ", icon: FaCrown },

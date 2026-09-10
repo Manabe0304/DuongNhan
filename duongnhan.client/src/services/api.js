@@ -64,4 +64,20 @@ export const registerApi = async ({ fullName, name, email, password, phoneNumber
   return response.data;
 };
 
+/**
+ * Gọi API Phân tích da AI: POST /api/skinanalysis/analyze
+ * @param {FormData} formData - Chứa ImageFile (ảnh chân dung) và UserNote (tuỳ chọn)
+ * @returns {Promise<Object>} Kết quả phân tích da SkinAnalysisResponse
+ */
+export const analyzeSkin = async (formData) => {
+  const auth = loadAuth();
+  const response = await api.post("/skinanalysis/analyze", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      ...(auth?.token ? { Authorization: `Bearer ${auth.token}` } : {}),
+    },
+  });
+  return response.data;
+};
+
 export default api;

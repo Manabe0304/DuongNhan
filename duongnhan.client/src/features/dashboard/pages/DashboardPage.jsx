@@ -83,14 +83,13 @@ export default function DashboardPage() {
               Làn da của bạn hôm nay đang ở trạng thái <strong>Hỗn hợp thiên dầu</strong>. Chỉ số sức khỏe tổng thể đạt <strong>82/100</strong>, độ ẩm được duy trì rất ổn định.
             </p>
             <div className="d-flex flex-wrap gap-2 pt-1">
-              <button
-                onClick={handleSimulateScan}
-                disabled={analyzing}
+              <Link
+                to={ROUTES.SCAN}
                 className="btn btn-coral r-pill px-4 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm"
               >
                 <FaCamera size={15} />
-                <span>{analyzing ? "Đang quét..." : "Soi da AI ngay"}</span>
-              </button>
+                <span>Soi da AI ngay</span>
+              </Link>
               <Link
                 to={ROUTES.DOCTORS}
                 className="btn btn-outline-ink r-pill px-4 fw-semibold d-inline-flex align-items-center gap-2"
