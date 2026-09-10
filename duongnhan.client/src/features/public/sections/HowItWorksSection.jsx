@@ -1,3 +1,4 @@
+
 const STEPS = [
   { n: "01", title: "Tải ảnh lên", desc: "Chụp hoặc tải lên một bức ảnh khuôn mặt rõ nét, không trang điểm." },
   { n: "02", title: "AI phân tích", desc: "Mô hình AI xử lý và chấm điểm mụn, dầu, độ ẩm, sắc tố trong vài giây." },

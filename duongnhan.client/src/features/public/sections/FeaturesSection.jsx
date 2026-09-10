@@ -20,7 +20,7 @@ export default function FeaturesSection() {
             >
               <div className="d-flex gap-3">
                 <span className={`d-flex align-items-center justify-content-center rounded-3 flex-shrink-0 bg-${f.tint}`} style={{ width: 44, height: 44 }}>
-                  <f.icon size={19} color={f.color} />
+                  <f.icon size={17} color={f.color} />
                 </span>
                 <div>
                   <h6 className="fw-semibold mb-1">{f.title}</h6>

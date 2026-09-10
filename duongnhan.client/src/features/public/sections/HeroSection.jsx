@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Upload, ArrowRight } from "lucide-react";
+import { FaUpload, FaArrowRight } from "react-icons/fa6";
 import ScoreGauge from "../../../shared/components/ScoreGauge";
 import { ROUTES } from "../../../router/routes";
 
@@ -20,10 +20,10 @@ export default function HeroSection() {
             </p>
             <div className="d-flex flex-wrap gap-2">
               <button onClick={() => navigate(ROUTES.REGISTER)} className="btn btn-coral r-pill px-4 py-2 fw-semibold d-flex align-items-center gap-2">
-                <Upload size={16} /> Phân tích da ngay
+                <FaUpload size={15} /> Phân tích da ngay
               </button>
               <button onClick={() => navigate(ROUTES.DOCTORS)} className="btn btn-outline-ink r-pill px-4 py-2 fw-semibold d-flex align-items-center gap-2">
-                Xem bác sĩ <ArrowRight size={16} />
+                Xem bác sĩ <FaArrowRight size={15} />
               </button>
             </div>
           </div>

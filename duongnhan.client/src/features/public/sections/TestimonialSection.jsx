@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { FaStar } from "react-icons/fa6";
 
 const ITEMS = [
   { text: "Chỉ sau 2 tuần dùng sản phẩm được Dưỡng Nhan gợi ý, da mình giảm dầu rõ rệt.", author: "Thu Hà, 24 tuổi" },
@@ -16,7 +16,7 @@ export default function TestimonialSection() {
             <div key={t.author} className="col-12 col-md-4">
               <div className="bg-white border border-line r-xl p-4 h-100">
                 <div className="d-flex gap-1 mb-2 text-coral">
-                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={14} fill="var(--coral)" />)}
+                  {Array.from({ length: 5 }).map((_, i) => <FaStar key={i} size={13} />)}
                 </div>
                 <p className="small mb-3">"{t.text}"</p>
                 <p className="text-muted-ss small fw-semibold mb-0">{t.author}</p>

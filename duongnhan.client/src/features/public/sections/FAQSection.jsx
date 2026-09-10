@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { FaChevronDown } from "react-icons/fa6";
 import { faqs } from "../data/faqs";
 
 export default function FAQSection() {
@@ -16,7 +16,7 @@ export default function FAQSection() {
                 className="btn w-100 d-flex align-items-center justify-content-between px-3 py-3 text-start border-0"
               >
                 <span className="fw-medium small">{f.q}</span>
-                <ChevronDown size={17} style={{ transform: openIdx === i ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+                <FaChevronDown size={14} style={{ transform: openIdx === i ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
               </button>
               {openIdx === i && <p className="px-3 pb-3 text-muted-ss small mb-0">{f.a}</p>}
             </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Menu, X, ScanFace } from "lucide-react";
+import { FaBars, FaXmark, FaUserDoctor } from "react-icons/fa6";
+import { useAuth } from "../hooks/useAuth";
 import { ROUTES } from "../../router/routes";
 
 const LINKS = [
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -29,7 +31,7 @@ export default function Navbar() {
       <div className="container h-100 d-flex align-items-center justify-content-between">
         <NavLink to={ROUTES.HOME} className="d-flex align-items-center gap-2 text-decoration-none">
           <span className="d-flex align-items-center justify-content-center rounded-circle bg-teal" style={{ width: 32, height: 32 }}>
-            <ScanFace size={17} color="#fff" />
+            <FaUserDoctor size={15} color="#fff" />
           </span>
           <span className="ss-display fs-5 fw-semibold text-body">Dưỡng Nhan</span>
         </NavLink>
@@ -43,12 +45,30 @@ export default function Navbar() {
         </nav>
 
         <div className="d-none d-md-flex align-items-center gap-2">
-          <button onClick={() => navigate(ROUTES.LOGIN)} className="btn btn-outline-ink r-pill btn-sm px-3">Đăng nhập</button>
-          <button onClick={() => navigate(ROUTES.REGISTER)} className="btn btn-coral r-pill btn-sm px-3 fw-semibold">Đăng ký</button>
+          {isAuthenticated ? (
+            <>
+              <button onClick={() => navigate(ROUTES.DASHBOARD)} className="btn btn-outline-ink r-pill btn-sm px-3">Dashboard</button>
+              <button onClick={() => navigate(ROUTES.DASHBOARD)} className="btn p-0 border-0" title={user?.name}>
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="rounded-circle" width={34} height={34} />
+                ) : (
+                  <span className="d-flex align-items-center justify-content-center rounded-circle bg-coral text-white fw-semibold" style={{ width: 34, height: 34, fontSize: ".8rem" }}>
+                    {user?.name?.[0]?.toUpperCase() || "U"}
+                  </span>
+                )}
+              </button>
+              <button onClick={logout} className="btn btn-link btn-sm text-muted-ss text-decoration-none">Đăng xuất</button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => navigate(ROUTES.LOGIN)} className="btn btn-outline-ink r-pill btn-sm px-3">Đăng nhập</button>
+              <button onClick={() => navigate(ROUTES.REGISTER)} className="btn btn-coral r-pill btn-sm px-3 fw-semibold">Đăng ký</button>
+            </>
+          )}
         </div>
 
         <button className="btn d-md-none border-0" onClick={() => setOpen(!open)}>
-          {open ? <X size={22} /> : <Menu size={22} />}
+          {open ? <FaXmark size={20} /> : <FaBars size={20} />}
         </button>
       </div>
 
@@ -61,10 +81,17 @@ export default function Navbar() {
               </NavLink>
             ))}
           </div>
-          <div className="d-flex gap-2">
-            <button onClick={() => navigate(ROUTES.LOGIN)} className="btn btn-outline-ink r-pill btn-sm flex-fill">Đăng nhập</button>
-            <button onClick={() => navigate(ROUTES.REGISTER)} className="btn btn-coral r-pill btn-sm flex-fill fw-semibold">Đăng ký</button>
-          </div>
+          {isAuthenticated ? (
+            <div className="d-flex gap-2">
+              <button onClick={() => { navigate(ROUTES.DASHBOARD); setOpen(false); }} className="btn btn-outline-ink r-pill btn-sm flex-fill">Dashboard</button>
+              <button onClick={() => { logout(); setOpen(false); }} className="btn btn-coral r-pill btn-sm flex-fill fw-semibold">Đăng xuất</button>
+            </div>
+          ) : (
+            <div className="d-flex gap-2">
+              <button onClick={() => { navigate(ROUTES.LOGIN); setOpen(false); }} className="btn btn-outline-ink r-pill btn-sm flex-fill">Đăng nhập</button>
+              <button onClick={() => { navigate(ROUTES.REGISTER); setOpen(false); }} className="btn btn-coral r-pill btn-sm flex-fill fw-semibold">Đăng ký</button>
+            </div>
+          )}
         </div>
       )}
     </header>

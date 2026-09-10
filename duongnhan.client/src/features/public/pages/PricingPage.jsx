@@ -1,11 +1,7 @@
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { FaCheck } from "react-icons/fa6";
 import { plans } from "../data/plans";
 
-/**
- * PricingPage — Route: "/pricing" (own URL, per roadmap 2.2)
- * Compares Free / Premium / VIP with a monthly/yearly toggle.
- */
 export default function PricingPage() {
   const [yearly, setYearly] = useState(false);
 
@@ -28,7 +24,7 @@ export default function PricingPage() {
         {plans.map((p) => (
           <div key={p.name} className="col-12 col-md-4">
             <div className={`r-xl p-4 h-100 d-flex flex-column border ${p.highlight ? "border-coral" : "border-line"}`} style={{ background: p.highlight ? "#FFF8F5" : "#fff" }}>
-              {p.highlight && <span className="badge bg-coral text-black align-self-start mb-2" style={{ fontSize: ".65rem" }}>PHỔ BIẾN NHẤT</span>}
+              {p.highlight && <span className="badge bg-coral text-white align-self-start mb-2" style={{ fontSize: ".65rem" }}>PHỔ BIẾN NHẤT</span>}
               <h5 className="fw-semibold mb-1">{p.name}</h5>
               <p className="text-muted-ss small mb-3">{p.tagline}</p>
               <p className="ss-mono fw-semibold mb-3" style={{ fontSize: "1.8rem" }}>
@@ -38,7 +34,7 @@ export default function PricingPage() {
               <ul className="list-unstyled d-flex flex-column gap-2 mb-4 flex-grow-1">
                 {p.features.map((f) => (
                   <li key={f} className="d-flex align-items-start gap-2 small">
-                    <Check size={15} className="flex-shrink-0 mt-1" color="var(--teal)" /> {f}
+                    <FaCheck size={13} className="flex-shrink-0 mt-1" color="var(--teal)" /> {f}
                   </li>
                 ))}
               </ul>

@@ -18,7 +18,7 @@ export default function Footer() {
               <span className="d-flex align-items-center justify-content-center rounded-circle bg-coral" style={{ width: 32, height: 32 }}>
                 <FaUserDoctor size={15} color="#fff" />
               </span>
-              <span className="ss-display fs-5 fw-semibold text-white">Skin Sensi</span>
+              <span className="ss-display fs-5 fw-semibold text-white">Dưỡng Nhan</span>
             </div>
             <p className="small mb-3" style={{ maxWidth: 320 }}>
               Nền tảng AI phân tích da và kết nối bác sĩ da liễu, giúp bạn hiểu làn da của chính mình.
@@ -48,11 +48,11 @@ export default function Footer() {
           <div className="col-12 col-md-3">
             <h6 className="text-white fw-semibold mb-3">Liên hệ</h6>
             <Link to={ROUTES.CONTACT} className="d-block small mb-2">Gửi liên hệ</Link>
-            <p className="small">hello@skinsensi.ai</p>
+            <p className="small">hello@duongnhan.ai</p>
           </div>
         </div>
         <div className="pt-3 border-top border-secondary text-center small">
-          © 2026 Skin Sensi AI Platform. Bảo lưu mọi quyền.
+          © 2026 Duongx Nhan AI Platform. Bảo lưu mọi quyền.
         </div>
       </div>
     </footer>

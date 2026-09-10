@@ -1,12 +1,7 @@
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { FaWandMagicSparkles } from "react-icons/fa6";
 import { mockProducts } from "../data/mockProducts";
 
-/**
- * ProductsPage — Route: "/products"
- * Public preview: category filter + product grid. MatchScore badge is shown
- * with mock values here; real % comes from analysisSlice once logged in.
- */
 export default function ProductsPage() {
   const [cat, setCat] = useState("Tất cả");
   const cats = ["Tất cả", "Serum", "Chống nắng", "Làm sạch", "Toner"];
@@ -22,7 +17,7 @@ export default function ProductsPage() {
       </div>
 
       <div className="bg-peach r-xl px-4 py-3 mb-4 d-flex align-items-center gap-2 small" style={{ color: "#B4471F" }}>
-        <Sparkles size={16} /> Đăng nhập để xem đề xuất AI theo loại da của bạn
+        <FaWandMagicSparkles size={15} /> Đăng nhập để xem đề xuất AI theo loại da của bạn
       </div>
 
       <div className="d-flex gap-2 flex-wrap mb-4">

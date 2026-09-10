@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 /**
- * Signature UI element of Skin Sensi: an animated radial "skin score" gauge.
- * Plain SVG + CSS transition — no chart library needed.
+ * Signature UI element of Duong Nhan: an animated radial "skin score" gauge.
+ * Plain SVG + CSS transition — no icon library or chart lib needed here.
  * Reused across HeroSection, DashboardPage and SkinHistoryPage (Phase 4/8).
  */
 export default function ScoreGauge({ score = 82, size = 200, label = "Overall Score" }) {

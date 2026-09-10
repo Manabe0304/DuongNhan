@@ -1,11 +1,6 @@
 import { useState } from "react";
-import { Send, MapPin, Clock } from "lucide-react";
+import { FaPaperPlane, FaLocationDot, FaClock } from "react-icons/fa6";
 
-/**
- * ContactPage — Route: "/contact"
- * Form (Tên · Email · Nội dung) wired to emailApi.js in real integration.
- * Submit here is a local mock; replace handleSubmit with emailApi.send(...).
- */
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
 
@@ -31,14 +26,14 @@ export default function ContactPage() {
             </div>
             <div>
               <label className="form-label small fw-semibold text-muted-ss">Email</label>
-              <input required type="email" className="form-control r-lg" placeholder="example@gmail.com" />
+              <input required type="email" className="form-control r-lg" placeholder="hello@gmail.com" />
             </div>
             <div>
               <label className="form-label small fw-semibold text-muted-ss">Nội dung</label>
               <textarea required rows={5} className="form-control r-lg" placeholder="Bạn cần hỗ trợ điều gì?" />
             </div>
             <button type="submit" className="btn btn-coral r-pill fw-semibold py-2 d-flex align-items-center justify-content-center gap-2">
-              <Send size={15} /> Gửi liên hệ
+              <FaPaperPlane size={14} /> Gửi liên hệ
             </button>
             {sent && <p className="text-teal small text-center mb-0">Cảm ơn bạn! Chúng tôi đã nhận được tin nhắn.</p>}
           </form>
@@ -47,13 +42,13 @@ export default function ContactPage() {
         <div className="col-12 col-md-6">
           <div className="bg-soft r-xl d-flex align-items-center justify-content-center mb-3" style={{ height: 200 }}>
             <div className="d-flex flex-column align-items-center text-muted-ss small gap-2">
-              <MapPin size={22} /> Bản đồ Google Map (placeholder)
+              <FaLocationDot size={20} /> Bản đồ Google Map (placeholder)
             </div>
           </div>
           <div className="bg-white border border-line r-xl p-3 d-flex flex-column gap-2 small">
-            <div className="d-flex align-items-center gap-2"><MapPin size={16} color="var(--coral)" /> 268 Lý Thường Kiệt, P. Cửa Nam, Hà Nội</div>
-            <div className="d-flex align-items-center gap-2"><Clock size={16} color="var(--coral)" /> 8:00 – 18:00, Thứ 2 – Thứ 7</div>
-            <div className="d-flex align-items-center gap-2"><Send size={16} color="var(--coral)" /> hello@duongnhan.ai</div>
+            <div className="d-flex align-items-center gap-2"><FaLocationDot size={14} color="var(--coral)" /> 268 Lý Thường Kiệt, P. Cửa Nam, Hà Nội</div>
+            <div className="d-flex align-items-center gap-2"><FaClock size={14} color="var(--coral)" /> 8:00 – 18:00, Thứ 2 – Thứ 7</div>
+            <div className="d-flex align-items-center gap-2"><FaPaperPlane size={14} color="var(--coral)" /> hello@duongnhan.ai</div>
           </div>
         </div>
       </div>

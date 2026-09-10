@@ -1,3 +1,4 @@
+
 export default function AboutSection() {
   return (
     <section className="px-3 py-5 bg-white">
@@ -9,7 +10,7 @@ export default function AboutSection() {
           để đưa ra lộ trình chăm sóc cá nhân hoá.
         </p>
         <p className="text-muted-ss mb-0">
-          Được xây dựng nền tảng và mô hình thị giác máy tính huấn luyện trên hàng nghìn ảnh da đã được bác sĩ
+          Được xây dựng trên React và mô hình thị giác máy tính huấn luyện trên hàng nghìn ảnh da đã được bác sĩ
           gán nhãn, Dưỡng Nhan hướng tới trở thành người bạn đồng hành đáng tin cậy cho hành trình dưỡng da của bạn.
         </p>
       </div>

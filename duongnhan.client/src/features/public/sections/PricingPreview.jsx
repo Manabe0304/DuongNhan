@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { FaArrowRight } from "react-icons/fa6";
 import { plans } from "../data/plans";
 import { ROUTES } from "../../../router/routes";
 
@@ -14,7 +14,7 @@ export default function PricingPreview() {
             <p className="text-muted-ss mb-0">Từ dùng thử miễn phí đến chăm sóc toàn diện cùng bác sĩ riêng.</p>
           </div>
           <button onClick={() => navigate(ROUTES.PRICING)} className="btn btn-link text-coral fw-semibold text-decoration-none d-flex align-items-center gap-1 p-0">
-            Xem chi tiết <ArrowRight size={15} />
+            Xem chi tiết <FaArrowRight size={14} />
           </button>
         </div>
         <div className="row g-3">
