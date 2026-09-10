@@ -11,15 +11,15 @@ import CompleteProfilePage from "../features/auth/pages/CompleteProfilePage";
 import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
 import DashboardPage from "../features/dashboard/pages/DashboardPage";
+import PrivateLayout from "../shared/layouts/Privatelayout";
 import PrivateRoute from "./PrivateRoute";
 import { ROUTES } from "./routes";
 
 /**
- * Phase 2 (PUBLIC, bọc PublicLayout) + Phase 3 (AUTH, standalone — KHÔNG
- * bọc layout nào, theo đúng roadmap) đều được khai báo ở đây.
- * PRIVATE zone (PrivateLayout: Sidebar + TopNavbar) sẽ được xây đầy đủ ở
- * Phase 4+; hiện chỉ có PrivateRoute guard + DashboardPage placeholder để
- * luồng đăng nhập/đăng ký có nơi để redirect tới.
+ * Router ứng dụng:
+ * - Public Zone: Bọc trong PublicLayout (Navbar + Footer)
+ * - Auth Zone: Standalone không bọc Layout
+ * - Private Zone: Guard bằng PrivateRoute + Layout hoàn chỉnh PrivateLayout (Sidebar + Topbar)
  */
 export const router = createBrowserRouter([
   {
@@ -38,9 +38,14 @@ export const router = createBrowserRouter([
   { path: ROUTES.COMPLETE_PROFILE, element: <CompleteProfilePage /> },
   { path: ROUTES.FORGOT_PASSWORD, element: <ForgotPasswordPage /> },
   { path: ROUTES.RESET_PASSWORD, element: <ResetPasswordPage /> },
-  // PRIVATE (placeholder — PrivateLayout đầy đủ ở Phase 4+)
+  // PRIVATE — Bọc trong PrivateRoute guard và PrivateLayout (Phase 4)
   {
     element: <PrivateRoute />,
-    children: [{ path: ROUTES.DASHBOARD, element: <DashboardPage /> }],
+    children: [
+      {
+        element: <PrivateLayout />,
+        children: [{ path: ROUTES.DASHBOARD, element: <DashboardPage /> }],
+      },
+    ],
   },
 ]);

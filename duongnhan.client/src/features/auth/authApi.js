@@ -1,11 +1,4 @@
-/**
- * authApi — MOCK, giống cách public/data/*.js mock ở Phase 2.
- * Chưa có backend nên các hàm dưới đây tự tạo phản hồi giả lập (có delay
- * cho giống mạng thật). Khi backend sẵn sàng, thay phần thân mỗi hàm bằng
- * lời gọi qua `api` (đã có sẵn interceptor JWT ở services/api.js), theo
- * đúng endpoint đã ghi chú — phần code gọi hàm ở component KHÔNG cần đổi.
- */
-// import { api } from "../../services/api";
+import { api } from "../../services/api";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -13,54 +6,99 @@ function fakeToken(prefix) {
   return `${prefix}.${Math.random().toString(36).slice(2)}.${Date.now()}`;
 }
 
-function makeUser({ name, email, isNewUser = false, avatar = null }) {
+function makeUser({ name, email, isNewUser = false, avatar = null, role = "Customer", isPremium = false }) {
   return {
     id: `usr_${Math.random().toString(36).slice(2, 10)}`,
     name,
+    fullName: name,
     email,
-    avatar,
-    role: "user",
-    membership: "Free",
+    avatar: avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(name || "User")}`,
+    role,
+    membership: isPremium ? "Premium" : "Free",
+    isPremium,
     isNewUser,
   };
 }
 
-// POST /api/auth/login
+/**
+ * Chuẩn hóa đối tượng user trả về từ backend API
+ */
+function normalizeUser(rawUser) {
+  if (!rawUser) return null;
+  const fullName = rawUser.fullName || rawUser.name || "Khách hàng";
+  return {
+    id: rawUser.id,
+    name: fullName,
+    fullName: fullName,
+    email: rawUser.email,
+    role: rawUser.role || "Customer",
+    isPremium: Boolean(rawUser.isPremium),
+    membership: rawUser.isPremium ? "Premium" : "Free",
+    avatar: rawUser.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(fullName)}`,
+    isNewUser: false,
+  };
+}
+
+/**
+ * POST /api/auth/login
+ * Đăng nhập qua Backend ASP.NET Core
+ */
 export async function login({ email, password }) {
-  await delay(900);
-  // Mock: mật khẩu quá ngắn xem như sai để demo được cả trạng thái lỗi
-  if (!email || password.length < 6) {
-    throw new Error("Email hoặc mật khẩu không đúng.");
+  try {
+    const response = await api.post("/auth/login", {
+      email: email.trim(),
+      password: password,
+    });
+
+    const data = response.data;
+    return {
+      token: data.token,
+      refreshToken: null,
+      user: normalizeUser(data.user),
+    };
+  } catch (err) {
+    const message =
+      err.response?.data?.message ||
+      (err.code === "ERR_NETWORK"
+        ? "Không thể kết nối tới Backend server (hãy chắc chắn DuongNhan.Server đang chạy)."
+        : err.message || "Đăng nhập thất bại.");
+    throw new Error(message);
   }
-  return {
-    token: fakeToken("jwt"),
-    refreshToken: fakeToken("rt"),
-    user: makeUser({ name: email.split("@")[0], email, isNewUser: false }),
-  };
 }
 
-// POST /api/auth/register
-export async function register({ name, email, password }) {
-  await delay(1000);
-  if (!name || !email || password.length < 6) {
-    throw new Error("Vui lòng kiểm tra lại thông tin đăng ký.");
+/**
+ * POST /api/auth/register
+ * Đăng ký tài khoản qua Backend ASP.NET Core
+ */
+export async function register({ name, email, password, phoneNumber }) {
+  try {
+    await api.post("/auth/register", {
+      fullName: name.trim(),
+      email: email.trim(),
+      password: password,
+      phoneNumber: phoneNumber || null,
+    });
+
+    // Tự động đăng nhập lấy token ngay sau khi đăng ký thành công
+    return await login({ email, password });
+  } catch (err) {
+    const message =
+      err.response?.data?.message ||
+      (err.code === "ERR_NETWORK"
+        ? "Không thể kết nối tới Backend server (hãy chắc chắn DuongNhan.Server đang chạy)."
+        : err.message || "Đăng ký thất bại.");
+    throw new Error(message);
   }
-  return {
-    token: fakeToken("jwt"),
-    refreshToken: fakeToken("rt"),
-    // Đăng ký thủ công không cần CompleteProfilePage (chỉ Google login lần
-    // đầu mới cần) nên isNewUser=false ngay từ đầu.
-    user: makeUser({ name, email, isNewUser: false }),
-  };
 }
 
-// POST /api/auth/google  { id_token }
+/**
+ * POST /api/auth/google
+ * Giữ giả lập hoặc tích hợp khi có Google OAuth backend endpoint
+ */
 export async function googleLogin(idToken) {
-  await delay(900);
+  await delay(800);
   if (!idToken) throw new Error("Không lấy được thông tin từ Google.");
 
-  // Demo: coi lần google-login đầu tiên trên trình duyệt này là user mới,
-  // để có thể xem cả 2 nhánh điều hướng (complete-profile / dashboard).
   const seenKey = "ss_google_seen";
   const isNewUser = !window.localStorage.getItem(seenKey);
   window.localStorage.setItem(seenKey, "1");
@@ -77,23 +115,29 @@ export async function googleLogin(idToken) {
   };
 }
 
-// POST /api/auth/forgot-password
+/**
+ * Quên mật khẩu (mock)
+ */
 export async function forgotPassword(email) {
-  await delay(900);
+  await delay(800);
   if (!email) throw new Error("Vui lòng nhập email.");
   return { message: "Đã gửi email khôi phục nếu địa chỉ này tồn tại." };
 }
 
-// POST /api/auth/reset-password
+/**
+ * Đặt lại mật khẩu (mock)
+ */
 export async function resetPassword({ token, password }) {
-  await delay(900);
+  await delay(800);
   if (!token) throw new Error("Liên kết đặt lại mật khẩu không hợp lệ.");
   if (password.length < 6) throw new Error("Mật khẩu phải có ít nhất 6 ký tự.");
   return { message: "Đặt lại mật khẩu thành công." };
 }
 
-// PATCH /api/auth/complete-profile
+/**
+ * Hoàn tất hồ sơ sau Google login (mock)
+ */
 export async function completeProfile(data) {
-  await delay(800);
+  await delay(600);
   return { ...data, isNewUser: false };
 }

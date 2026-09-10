@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using DuongNhan.Server.Data;
@@ -28,19 +28,28 @@ namespace DuongNhan.Server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterRequest model)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password) || string.IsNullOrWhiteSpace(model.FullName))
+            {
+                return BadRequest(new { message = "Vui lòng điền đầy đủ họ tên, email và mật khẩu!" });
+            }
+
+            var email = model.Email.Trim().ToLower();
+            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == email))
             {
                 return BadRequest(new { message = "Email này đã được sử dụng!" });
             }
 
+            var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<User>();
             var user = new User
             {
-                FullName = model.FullName,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                PasswordHash = model.Password, // Tạm thời lưu pass thô để test kết nối JWT
-                Role = "Customer"
+                FullName = model.FullName.Trim(),
+                Email = email,
+                PhoneNumber = model.PhoneNumber?.Trim(),
+                Role = "Customer",
+                IsPremium = false,
+                CreatedAt = DateTime.UtcNow
             };
+            user.PasswordHash = hasher.HashPassword(user, model.Password);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -52,9 +61,35 @@ namespace DuongNhan.Server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest model)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password))
+            {
+                return BadRequest(new { message = "Vui lòng nhập đầy đủ email và mật khẩu!" });
+            }
 
-            if (user == null || user.PasswordHash != model.Password)
+            var email = model.Email.Trim().ToLower();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email);
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Tài khoản hoặc mật khẩu không chính xác!" });
+            }
+
+            var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<User>();
+            bool isValidPassword = false;
+            var verifyResult = hasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
+            if (verifyResult == Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success ||
+                verifyResult == Microsoft.AspNetCore.Identity.PasswordVerificationResult.SuccessRehashNeeded)
+            {
+                isValidPassword = true;
+            }
+            else if (user.PasswordHash == model.Password)
+            {
+                isValidPassword = true;
+                user.PasswordHash = hasher.HashPassword(user, model.Password);
+                await _context.SaveChangesAsync();
+            }
+
+            if (!isValidPassword)
             {
                 return Unauthorized(new { message = "Tài khoản hoặc mật khẩu không chính xác!" });
             }
