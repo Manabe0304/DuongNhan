@@ -1,4 +1,4 @@
-﻿using DuongNhan.Server.Entities;
+using DuongNhan.Server.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -11,12 +11,29 @@ namespace DuongNhan.Server.Data
         {
         }
 
-        // Đầy đủ 5 bảng cốt lõi cho dự án
+        // 18 bảng theo thiết kế cơ sở dữ liệu
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<SkinProfile> SkinProfiles { get; set; } = null!;
+        public DbSet<SkinAnalysis> SkinAnalyses { get; set; } = null!;
+        public DbSet<SkinCondition> SkinConditions { get; set; } = null!;
+        public DbSet<Brand> Brands { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<AffiliateLink> AffiliateLinks { get; set; } = null!;
+        public DbSet<ProductRecommendation> ProductRecommendations { get; set; } = null!;
+        public DbSet<Doctor> Doctors { get; set; } = null!;
+        public DbSet<Clinic> Clinics { get; set; } = null!;
+        public DbSet<DoctorClinic> DoctorClinics { get; set; } = null!;
+        public DbSet<Appointment> Appointments { get; set; } = null!;
+        public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; } = null!;
+        public DbSet<UserSubscription> UserSubscriptions { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderItem> OrderItems { get; set; } = null!;
+        public DbSet<MembershipPoint> MembershipPoints { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
+
+        // Bảng tương thích ngược phiên bản cũ
         public DbSet<DoctorProfile> DoctorProfiles { get; set; } = null!;
         public DbSet<SkinAnalysisHistory> SkinAnalysisHistories { get; set; } = null!;
-        public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<Appointment> Appointments { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

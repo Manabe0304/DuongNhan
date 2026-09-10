@@ -1,4 +1,5 @@
 using DuongNhan.Server.Data;
+using DuongNhan.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Đăng ký Services vào DI container
+builder.Services.AddScoped<ISkinAnalysisService, SkinAnalysisService>();
 
 // Đăng ký DbContext sử dụng SQL Server và cấu hình lấy Connection String từ appsettings.json
 builder.Services.AddDbContext<DuongNhanDbContext>(options =>
