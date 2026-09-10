@@ -1,26 +1,23 @@
-
+import HeroSection from "../sections/HeroSection";
+import FeaturesSection from "../sections/FeaturesSection";
+import HowItWorksSection from "../sections/HowItWorksSection";
+import AboutSection from "../sections/AboutSection";
+import FAQSection from "../sections/FAQSection";
+import PricingPreview from "../sections/PricingPreview";
+import TestimonialSection from "../sections/TestimonialSection";
+import CTABanner from "../sections/CTABanner";
 
 export default function HomePage() {
-    return (
-        <div
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                background: "#ffffff",
-            }}
-        >
-            <h1>Welcome To SkinAI</h1>
-
-            <p>
-                AI Skin Analysis & Recommendation
-            </p>
-
-            <button>
-                Login
-            </button>
-        </div>
-    );
+  return (
+    <div>
+      <HeroSection />
+      <FeaturesSection />
+      <HowItWorksSection />
+      <AboutSection />
+      <FAQSection />
+      <PricingPreview />
+      <TestimonialSection />
+      <CTABanner />
+    </div>
+  );
 }
