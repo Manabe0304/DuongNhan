@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa6";
@@ -14,6 +14,7 @@ import { ROUTES } from "../../../router/routes";
  */
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const { loading, error: authError } = useSelector((state) => state.auth);
@@ -48,7 +49,8 @@ export default function RegisterPage() {
       ).unwrap();
 
       toast.success("Tạo tài khoản và đăng nhập thành công!");
-      navigate(ROUTES.DASHBOARD, { replace: true });
+      const from = location.state?.from?.pathname || ROUTES.DASHBOARD;
+      navigate(from, { replace: true });
     } catch (err) {
       const errorMsg = typeof err === "string" ? err : err?.message || "Đăng ký thất bại.";
       setLocalError(errorMsg);

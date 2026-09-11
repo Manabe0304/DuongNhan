@@ -65,6 +65,15 @@ export const registerApi = async ({ fullName, name, email, password, phoneNumber
 };
 
 /**
+ * Gọi API lấy thông tin người dùng hiện tại: GET /api/auth/me (Yêu cầu JWT Bearer Token)
+ * @returns {Promise<Object>} Thông tin chi tiết user
+ */
+export const getMeApi = async () => {
+  const response = await api.get("/auth/me");
+  return response.data;
+};
+
+/**
  * Gọi API Phân tích da AI: POST /api/skinanalysis/analyze
  * @param {FormData} formData - Chứa ImageFile (ảnh chân dung) và UserNote (tuỳ chọn)
  * @returns {Promise<Object>} Kết quả phân tích da SkinAnalysisResponse

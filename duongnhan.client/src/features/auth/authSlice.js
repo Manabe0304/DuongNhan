@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { loginApi, registerApi } from "../../services/api";
+import { loginApi, registerApi, getMeApi } from "../../services/api";
 import { loadAuth, saveAuth, clearAuth } from "../../utils/authStorage";
 
 /**
@@ -8,15 +8,19 @@ import { loadAuth, saveAuth, clearAuth } from "../../utils/authStorage";
 const normalizeUser = (rawUser) => {
   if (!rawUser) return null;
   const fullName = rawUser.fullName || rawUser.name || "Người dùng";
+  const role = rawUser.role || "Customer";
   return {
     id: rawUser.id,
     name: fullName,
     fullName: fullName,
     email: rawUser.email,
-    role: rawUser.role || "Customer",
+    phoneNumber: rawUser.phoneNumber || "",
+    role: role,
+    roleNormalized: role.toLowerCase(),
     isPremium: Boolean(rawUser.isPremium),
     membership: rawUser.isPremium ? "Premium" : "Free",
     avatar: rawUser.avatar || `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(fullName)}`,
+    createdAt: rawUser.createdAt || null,
     isNewUser: false,
   };
 };
@@ -81,10 +85,28 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+/**
+ * Async Thunk: Lấy thông tin tài khoản hiện tại từ Token JWT (GET /api/auth/me)
+ */
+export const fetchCurrentUser = createAsyncThunk(
+  "auth/fetchCurrentUser",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const data = await getMeApi();
+      const user = normalizeUser(data);
+      const stateToken = getState().auth.token;
+      saveAuth({ token: stateToken, user }, true);
+      return user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 const persisted = loadAuth();
 
 const initialState = {
-  user: persisted?.user ?? null,
+  user: persisted?.user ? normalizeUser(persisted.user) : null,
   token: persisted?.token ?? null,
   refreshToken: persisted?.refreshToken ?? null,
   isAuthenticated: Boolean(persisted?.token),
@@ -109,7 +131,7 @@ const authSlice = createSlice({
     },
     // Cập nhật thông tin profile của user
     updateUser(state, action) {
-      state.user = { ...state.user, ...action.payload };
+      state.user = normalizeUser({ ...state.user, ...action.payload });
       saveAuth({ token: state.token, refreshToken: state.refreshToken, user: state.user }, true);
     },
     // Đăng xuất và dọn dẹp LocalStorage
@@ -159,6 +181,10 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      // Xử lý fetchCurrentUser
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   },
 });
