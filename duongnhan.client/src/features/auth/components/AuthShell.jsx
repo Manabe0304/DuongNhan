@@ -18,7 +18,7 @@ export default function AuthShell({ title, subtitle, children, footer }) {
           <span className="d-flex align-items-center justify-content-center rounded-circle bg-coral" style={{ width: 32, height: 32 }}>
             <FaUserDoctor size={15} color="#fff" />
           </span>
-          <span className="ss-display fs-5 fw-semibold">Skin Sensi</span>
+          <span className="ss-display fs-5 fw-semibold">Duong Nhan</span>
         </Link>
 
         <div>
@@ -35,7 +35,7 @@ export default function AuthShell({ title, subtitle, children, footer }) {
           </div>
         </div>
 
-        <p className="text-white-50 small mb-0">© 2026 Skin Sensi AI Platform</p>
+        <p className="text-white-50 small mb-0">© 2026 Duong Nhan AI Platform</p>
       </div>
 
       {/* Panel form */}
