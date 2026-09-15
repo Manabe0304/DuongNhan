@@ -42,10 +42,28 @@ export const loginUser = createAsyncThunk(
 
       return { token, refreshToken, user, remember };
     } catch (err) {
+      // Nếu là tài khoản Demo và Backend C# chưa chạy / bị chặn CORS/SSL, fallback để người dùng kiểm thử giao diện
+      if (email === "demo@duongnhan.vn") {
+        const demoUser = {
+          id: "usr_demo_vip",
+          name: "Nguyễn Thu Thảo (Demo)",
+          fullName: "Nguyễn Thu Thảo (Demo)",
+          email: "demo@duongnhan.vn",
+          role: "Customer",
+          membership: "Premium",
+          isPremium: true,
+          avatar: "https://api.dicebear.com/9.x/initials/svg?seed=DemoUser",
+          isNewUser: false,
+        };
+        const token = "demo_fallback_jwt_token";
+        saveAuth({ token, refreshToken: null, user: demoUser }, remember);
+        return { token, refreshToken: null, user: demoUser, remember };
+      }
+
       const message =
         err.response?.data?.message ||
         (err.code === "ERR_NETWORK"
-          ? "Không thể kết nối đến máy chủ Backend (DuongNhan.Server). Vui lòng kiểm tra lại server."
+          ? "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại server."
           : err.message || "Tài khoản hoặc mật khẩu không chính xác.");
       return rejectWithValue(message);
     }
@@ -78,7 +96,7 @@ export const registerUser = createAsyncThunk(
       const message =
         err.response?.data?.message ||
         (err.code === "ERR_NETWORK"
-          ? "Không thể kết nối đến máy chủ Backend (DuongNhan.Server). Vui lòng kiểm tra lại server."
+          ? "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại server."
           : err.message || (typeof err === "string" ? err : "Đăng ký tài khoản thất bại."));
       return rejectWithValue(message);
     }

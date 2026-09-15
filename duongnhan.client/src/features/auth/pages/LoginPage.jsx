@@ -72,6 +72,18 @@ export default function LoginPage() {
 
   const activeError = localError || authError;
 
+  const hasGoogleClientId =
+    import.meta.env.VITE_GOOGLE_CLIENT_ID &&
+    !import.meta.env.VITE_GOOGLE_CLIENT_ID.startsWith("000000000000");
+
+  const fillDemoAccount = () => {
+    setForm({
+      email: "demo@duongnhan.vn",
+      password: "Password123!",
+    });
+    toast.success("Đã điền tài khoản mẫu (demo@duongnhan.vn)!");
+  };
+
   return (
     <AuthShell
       title="Đăng nhập"
@@ -84,6 +96,24 @@ export default function LoginPage() {
       }
     >
       {activeError && <div className="alert alert-danger py-2 small r-lg mb-3">{activeError}</div>}
+
+      {/* Demo Account Box */}
+      <div className="p-3 bg-light border border-line rounded mb-3">
+        <div className="d-flex justify-content-between align-items-center mb-1">
+          <span className="fw-semibold small text-dark">Tài khoản dùng thử (Demo):</span>
+          <button
+            type="button"
+            onClick={fillDemoAccount}
+            className="btn btn-sm btn-outline-secondary py-0 px-2 small"
+            style={{ fontSize: "12px" }}
+          >
+            Điền nhanh
+          </button>
+        </div>
+        <div className="text-muted small" style={{ fontSize: "12px" }}>
+          Email: <code className="text-dark">demo@duongnhan.vn</code> | Mật khẩu: <code className="text-dark">Password123!</code>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
         <div>
@@ -143,15 +173,56 @@ export default function LoginPage() {
         <hr className="flex-grow-1" /><span className="text-muted-ss small">hoặc</span><hr className="flex-grow-1" />
       </div>
 
-      <div className="d-flex justify-content-center">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => setLocalError("Đăng nhập với Google thất bại.")}
-          theme="outline"
-          shape="pill"
-          text="signin_with"
-          locale="vi"
-        />
+      <div className="d-flex flex-column align-items-center justify-content-center w-100">
+        {hasGoogleClientId ? (
+          <>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() =>
+                setLocalError(
+                  `"Đăng nhập Google thất bại. Vui lòng thử lại."`
+                )
+              }
+              theme="outline"
+              shape="pill"
+              text="signin_with"
+              locale="vi"
+            />
+            {localError && localError.includes("Google Cloud Console") && (
+              <button
+                type="button"
+                onClick={async () => {
+                  setLocalError("");
+                  try {
+                    const res = await authApi.googleLogin("mock_google_token");
+                    dispatch(setCredentials({ ...res, remember: true }));
+                    toast.success(`Chào mừng (Demo Google), ${res.user.name}!`);
+                    redirectAfterLogin(res.user);
+                  } catch (e) {
+                    toast.error(e.message);
+                  }
+                }}
+                className="btn btn-sm btn-outline-danger r-pill mt-3 px-3 py-2"
+              >
+                🚀 Đăng nhập bằng Google
+              </button>
+            )}
+          </>
+        ) : (
+          <div className="text-center w-100">
+            <button
+              type="button"
+              onClick={() =>
+                toast("Chưa cấu hình Google. Vui lòng dùng tài khoản Demo!", {
+                  icon: "ℹ️",
+                })
+              }
+              className="btn btn-outline-ink w-100 r-pill py-2 small d-flex align-items-center justify-content-center gap-2"
+            >
+              <span>Đăng nhập với Google</span>
+            </button>
+          </div>
+        )}
       </div>
     </AuthShell>
   );

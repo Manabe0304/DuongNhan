@@ -1,12 +1,19 @@
 import axios from "axios";
 import { loadAuth, clearAuth } from "../utils/authStorage";
 
+const getBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (!envUrl) return "/api";
+  const trimmed = envUrl.trim().replace(/\/+$/, "");
+  return trimmed.endsWith("/api") ? trimmed : `${trimmed}/api`;
+};
+
 /**
  * Axios instance dùng chung cho toàn bộ ứng dụng.
  * Tự động gắn tiền tố /api và bắt lỗi timeout sau 15s.
  */
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
+  baseURL: getBaseUrl(),
   timeout: 15000,
 });
 
