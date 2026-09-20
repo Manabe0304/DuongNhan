@@ -1,11 +1,8 @@
 using DuongNhan.Server.DTOs.Requests;
-using DuongNhan.Server.DTOs.Responses;
 using DuongNhan.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace DuongNhan.Server.Controllers
 {

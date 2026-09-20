@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using DuongNhan.Server.Data;
 using DuongNhan.Server.Entities;
-using DuongNhan.Server.DTOs.Requests;
-using DuongNhan.Server.DTOs.Responses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DTOs.Requests;
+using DTOs.Responses;
 
 namespace DuongNhan.Server.Controllers
 {
@@ -144,18 +144,8 @@ namespace DuongNhan.Server.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            var response = new AuthResponse
-            {
-                Token = tokenString,
-                User = new UserData
-                {
-                    Id = user.Id,
-                    FullName = user.FullName,
-                    Email = user.Email,
-                    Role = user.Role,
-                    IsPremium = user.IsPremium
-                }
-            };
+            var userData = new UserData(user.Id, user.FullName, user.Email, user.Role, user.IsPremium);
+            var response = new AuthResponse(tokenString, userData);
 
             return Ok(response);
         }
