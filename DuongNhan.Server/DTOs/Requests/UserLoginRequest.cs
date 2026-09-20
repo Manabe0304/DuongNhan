@@ -1,8 +1,7 @@
-﻿namespace DuongNhan.Server.DTOs.Requests
-{
-    public class UserLoginRequest
-    {
-        public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
-    }
-}
+﻿namespace DTOs.Requests;
+
+public sealed record UserLoginRequest
+(
+    string Email,
+    string Password
+);

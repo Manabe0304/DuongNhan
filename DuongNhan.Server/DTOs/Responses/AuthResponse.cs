@@ -1,17 +1,16 @@
-﻿namespace DuongNhan.Server.DTOs.Responses
-{
-    public class AuthResponse
-    {
-        public string Token { get; set; } = null!;
-        public UserData User { get; set; } = null!;
-    }
+﻿namespace DTOs.Responses;
 
-    public class UserData
-    {
-        public Guid Id { get; set; }
-        public string FullName { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Role { get; set; } = null!;
-        public bool IsPremium { get; set; }
-    }
-}
+public sealed record AuthResponse
+(
+    string Token,
+    UserData User
+);
+
+public sealed record UserData
+(
+    Guid Id,
+    string FullName,
+    string Email,
+    string Role,
+    bool IsPremium
+);

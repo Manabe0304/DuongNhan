@@ -1,5 +1,5 @@
+using DTOs.Responses;
 using DuongNhan.Server.DTOs.Requests;
-using DuongNhan.Server.DTOs.Responses;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,6 +1,6 @@
+using DTOs.Responses;
 using DuongNhan.Server.Data;
 using DuongNhan.Server.DTOs.Requests;
-using DuongNhan.Server.DTOs.Responses;
 using DuongNhan.Server.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -236,36 +236,34 @@ namespace DuongNhan.Server.Services
 
         private SkinAnalysisResponse MapToResponse(SkinAnalysis analysis, List<SkinCondition> conditions, string skinType)
         {
-            var conditionResponses = conditions.Select(c => new SkinConditionResponse
-            {
-                Id = c.Id,
-                ConditionType = c.ConditionType,
-                ConditionName = GetConditionDisplayName(c.ConditionType),
-                SeverityScore = c.SeverityScore,
-                Zone = c.Zone,
-                ZoneName = GetZoneDisplayName(c.Zone),
-                ConfidenceScore = c.ConfidenceScore,
-                RecommendationNote = c.RecommendationNote
-            }).ToList();
-
+            var conditionResponses = conditions.Select(c => new SkinConditionResponse(
+                c.Id,
+                c.ConditionType,
+                GetConditionDisplayName(c.ConditionType),
+                c.SeverityScore,
+                c.Zone,
+                GetZoneDisplayName(c.Zone),
+                c.ConfidenceScore,
+                c.RecommendationNote
+            )).ToList();
+                            
             var summary = $"Làn da được đánh giá ở mức {analysis.OverallScore}/100. Tình trạng da chính là {GetSkinTypeDisplayName(skinType)}, các vấn đề cần lưu ý là mụn li ti và lỗ chân lông vùng chữ T.";
-
-            return new SkinAnalysisResponse
-            {
-                Id = analysis.Id,
-                UserId = analysis.UserId,
-                ImageUrl = analysis.ImageUrl,
-                ImageThumbnailUrl = analysis.ImageThumbnailUrl,
-                OverallScore = analysis.OverallScore ?? 80,
-                SkinType = skinType,
-                Summary = summary,
-                AIModelVersion = analysis.AIModelVersion,
-                RawAIResponse = analysis.RawAIResponse,
-                IsVerifiedByDoctor = analysis.IsVerifiedByDoctor,
-                DoctorNote = analysis.DoctorNote,
-                AnalysedAt = analysis.AnalysedAt,
-                Conditions = conditionResponses
-            };
+            
+            return new SkinAnalysisResponse(
+                analysis.Id,
+                analysis.UserId,
+                analysis.ImageUrl,
+                analysis.ImageThumbnailUrl,
+                analysis.OverallScore ?? 80m,
+                skinType,
+                summary,
+                analysis.AIModelVersion,
+                analysis.RawAIResponse,
+                analysis.IsVerifiedByDoctor,
+                analysis.DoctorNote,
+                analysis.AnalysedAt,
+                conditionResponses
+            );
         }
 
         private static string GetConditionDisplayName(string conditionType) => conditionType switch
